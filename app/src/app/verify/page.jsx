@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation"; // Use 'next/navigation' for 'useRouter' in App Router (if using Next 13)
 import { Loader2, AlertCircle } from "lucide-react";
 
 const VerifyOTP = () => {
@@ -31,7 +31,7 @@ const VerifyOTP = () => {
 
     try {
       const response = await fetch(
-        "https://auth-system-backend-sepia.vercel.app/verify-otp",
+        "https://stephen-project.onrender.com/verify-otp",
         {
           method: "POST",
           headers: {
@@ -50,7 +50,9 @@ const VerifyOTP = () => {
 
       // Show success message and navigate to dashboard
       setSuccess("OTP verified successfully! Redirecting to dashboard...");
-      router.push("/dashboard");
+      if (router) {
+        router.push("/dashboard");
+      }
     } catch (err) {
       setError(err.message || "An error occurred during verification");
     } finally {
