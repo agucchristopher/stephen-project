@@ -64,14 +64,17 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://127.0.0.1:8080/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "*/*",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://auth-system-backend-sepia.vercel.app/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "*/*",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await response.json();
 

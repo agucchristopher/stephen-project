@@ -23,14 +23,17 @@ const VerifyOTP = () => {
     }
 
     try {
-      const response = await fetch("http://127.0.0.1:8080/verify-otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "*/*",
-        },
-        body: JSON.stringify({ otp, email }),
-      });
+      const response = await fetch(
+        "https://auth-system-backend-sepia.vercel.app/verify-otp",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "*/*",
+          },
+          body: JSON.stringify({ otp, email }),
+        }
+      );
 
       const data = await response.json();
 
