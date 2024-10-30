@@ -58,19 +58,19 @@ app.post("/signup", async (req, res) => {
     });
     await user.save();
 
-    // Send OTP email
-    const mailOptions = {
-      from: "aguchris740@gmail.com",
-      to: email,
-      subject: "Your OTP for Verification",
-      text: `Hello ${firstName},\n\nYour OTP for account verification is: ${otp}\n\nBest regards,\nYour Team`,
-    };
+    // // Send OTP email
+    // const mailOptions = {
+    //   from: "aguchris740@gmail.com",
+    //   to: email,
+    //   subject: "Your OTP for Verification",
+    //   text: `Hello ${firstName},\n\nYour OTP for account verification is: ${otp}\n\nBest regards,\nYour Team`,
+    // };
 
-    await transporter.sendMail(mailOptions);
-    res.status(201).json({
-      message: "User registered successfully. OTP sent to email.",
-      user,
-    });
+    // await transporter.sendMail(mailOptions);
+    // res.status(201).json({
+    //   message: "User registered successfully. OTP sent to email.",
+    //   user,
+    // });
   } catch (error) {
     console.error(error.message);
     res.status(400).json({ error: error.message });
@@ -78,6 +78,7 @@ app.post("/signup", async (req, res) => {
 });
 
 // Signin route
+// Login route with OTP generation
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -87,21 +88,31 @@ app.post("/login", async (req, res) => {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 
-    // // Check if user is verified
-    // if (!user.isVerified) {
-    //   return res
-    //     .status(403)
-    //     .json({ error: "Account not verified. Please verify your OTP." });
-    // }
-
     // Compare entered password with stored hashed password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ error: "Invalid email or password" });
     }
-    if (isMatch) {
-      res.status(200).json({ message: "Login successful" });
-    }
+
+    // Generate new OTP and save it
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    user.otp = otp; // Store new OTP
+    await user.save();
+
+    // Send OTP email
+    const mailOptions = {
+      from: "aguchris740@gmail.com",
+      to: email,
+      subject: "Your OTP for Login Verification",
+      text: `Hello ${user.firstName},\n\nYour OTP for login verification is: ${otp}\n\nBest regards,\nYour Team`,
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({
+      message: "Login successful. OTP sent to email for verification.",
+      userId: user._id,
+      user,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
