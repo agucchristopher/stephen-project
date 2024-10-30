@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Loader2, AlertCircle } from "lucide-react";
 
@@ -8,8 +8,15 @@ const VerifyOTP = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-  const email = window.localStorage.getItem("email");
-  // const router = useRouter();
+  const [email, setEmail] = useState(null);
+  const router = useRouter();
+
+  // Fetch email from localStorage on client side only
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setEmail(window.localStorage.getItem("email"));
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +31,7 @@ const VerifyOTP = () => {
 
     try {
       const response = await fetch(
-        "https://stephen-project.onrender.com/verify-otp",
+        "https://auth-system-backend-sepia.vercel.app/verify-otp",
         {
           method: "POST",
           headers: {
@@ -41,11 +48,9 @@ const VerifyOTP = () => {
         throw new Error(data.error || "Verification failed");
       }
 
-      // Show success message and navigate to login page
-      setSuccess("OTP verified successfully! Redirecting to login...");
-      if (typeof window !== "undefined") {
-        window.location.href = "/dashboard";
-      }
+      // Show success message and navigate to dashboard
+      setSuccess("OTP verified successfully! Redirecting to dashboard...");
+      router.push("/dashboard");
     } catch (err) {
       setError(err.message || "An error occurred during verification");
     } finally {
