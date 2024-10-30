@@ -65,7 +65,7 @@ const Signup = () => {
 
     try {
       const response = await fetch(
-        "https://auth-system-backend-sepia.vercel.app/signup",
+        "https://stephen-project.onrender.com/signup",
         {
           method: "POST",
           headers: {

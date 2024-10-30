@@ -24,7 +24,7 @@ const VerifyOTP = () => {
 
     try {
       const response = await fetch(
-        "https://auth-system-backend-sepia.vercel.app/verify-otp",
+        "https://stephen-project.onrender.com/verify-otp",
         {
           method: "POST",
           headers: {
