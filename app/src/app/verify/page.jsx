@@ -43,7 +43,9 @@ const VerifyOTP = () => {
 
       // Show success message and navigate to login page
       setSuccess("OTP verified successfully! Redirecting to login...");
-      window.location ? (window.location.href = "/dashboard") : null;
+      if (typeof window !== "undefined") {
+        window.location ? (window.location.href = "/dashboard") : null;
+      }
     } catch (err) {
       setError(err.message || "An error occurred during verification");
     } finally {
